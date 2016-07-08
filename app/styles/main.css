@@ -94,29 +94,29 @@ body {
 .film {
     height: 335px;
 }
-.movie-capt {
+.item-capt {
     height: 75px;
     overflow: hidden;
 }
 
-.movie-pic-img {
+.item-pic-img {
     max-height: 100%;
 }
 
-.movie-small {
+.item-small {
     height: 210px;
 }
 
-.movie-pic-small {
+.item-pic-small {
     height: 139px;
     margin-bottom: 0px;
 
 }
-.movie-column-small {
+.item-column-small {
     padding: 7px;
 }
 
-.caption.movie-caption-small{
+.caption.item-caption-small{
     padding: 1px;
     max-height: 62px;
     overflow: hidden;

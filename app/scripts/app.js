@@ -10,6 +10,7 @@
  */
 angular
     .module('movielensApp', [
+        'cb.x2js',
         'ngAnimate',
         'ngCookies',
         'ngResource',
@@ -17,6 +18,7 @@ angular
         'ngSanitize',
         'ngTouch',
         'Seldon'
+
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -41,13 +43,13 @@ angular
 var seldonAPI = angular.module('Seldon', ['ngResource']);
 
 
-seldonAPI.factory('Seldon', ['$http','$q',
-    function($http, $q){
-        var prefix = "";
-        var host = "";
-        var consumer_key = "tnedddvlho";
-        var consumer_key2 = 'uggyecofcz';
-        var consumer_secret = "lzufhqbomz";
+seldonAPI.factory('Seldon', ['$http','$q', 'x2js',
+    function($http, $q, x2js){
+        var prefix = "http://";
+        var host = "10.0.0.190";
+        var consumer_key = "ZEFH7RXHR5UE9TC3FR2D";
+        var consumer_key2 = 'P7HXTMLB151SBGTNVI3G';
+        var consumer_secret = "Y7R93F1I76R5WHRH2JVZ";
         var _access_token;
 
         var getAccessToken = function() {
@@ -83,7 +85,14 @@ seldonAPI.factory('Seldon', ['$http','$q',
             return def.promise;
         };
 
+        var getTwoDigit = function (num) {
+            return ('0'+num).slice(-2);
+        };
+
         return {
+            setHost: function(ip) {
+                host = ip;
+            },
             getAccessToken: function(){
                 return getAccessToken();
             },
@@ -126,14 +135,14 @@ seldonAPI.factory('Seldon', ['$http','$q',
                 return def.promise;
 
             },
-            addUserAction: function(user_id, item_id) {
+            addUserAction: function(user_id, item_id, type) {
 
                 var endpoint = "/js/action/new";
 
                 var params = {
                     'consumer_key': consumer_key2,
                     // 'consumer_secret': consumer_secret,
-                    'type': '1',
+                    'type': type,
                     'jsonpCallback': 'JSON_CALLBACK',
                     'user':user_id,
                     'item':item_id,
@@ -184,6 +193,31 @@ seldonAPI.factory('Seldon', ['$http','$q',
                 return deferred.promise;
             },
 
+            getUser: function(user_id) {
+                var endpoint = "https://crossorigin.me/http://api.ahalife.com/user/"+user_id+"?auth-key=15";
+                var params = {
+
+                };
+                // 'jsonpCallback': 'JSON_CALLBACK'
+                var deferred = $q.defer();
+                console.log(endpoint);
+                console.log(params);
+
+                var config = {
+                    headers:  {
+                        'Accept': 'application/json;odata=verbose'
+                    }
+                };
+
+                $http.get(endpoint, config).success(function(data, status, headers, config) {
+                    // console.log(headers('Location'));
+                    data = x2js.xml_str2json(data);
+                    deferred.resolve(data['GetUserResponse']);
+                    //console.log(JSON.stringify(data));
+                });
+                return deferred.promise;
+            },
+
             getRecentActions: function(user_id) {
 
                 var endpoint = "/users/" + user_id + "/actions";
@@ -204,15 +238,51 @@ seldonAPI.factory('Seldon', ['$http','$q',
                 var params = {
                     'consumer_key': consumer_key2,
                     'user': user_id,
-                    'attributes': 'title,img_url,genre1',
+                    'attributes': 'name,image,tag_name',
                     // 'consumer_secret': consumer_secret,
                     'jsonpCallback': 'JSON_CALLBACK',
                     'item': item_id, // do we need to include an item?
-                    'limit':'10',
+                    'limit':'20',
                     'algorithms': algorithms,
                 };
 
                 return asyncAPICall(endpoint,params);
+
+            },
+            getXRecommendations: function(strategy, user_email) {
+
+                var endpoint = "https://crossorigin.me/http://my.ahalife.com/u";
+                var today = new Date();
+                var params = {
+                    's': strategy,
+                    'e': user_email,
+                    'ejid': today.getFullYear()+''+getTwoDigit(today.getMonth())+''+getTwoDigit(today.getDate()),
+                };
+                // 'jsonpCallback': 'JSON_CALLBACK'
+                var def = $q.defer();
+                console.log(endpoint);
+                console.log(params);
+
+                $http.get(endpoint, {'params':params}).success(function(data, status, headers, config) {
+                    // console.log(headers('Location'));
+                    def.resolve({"list": data});
+                    console.log(JSON.stringify({"list": data}));
+                });
+
+               /* $http({
+                    method: 'JSONP',
+                    url: endpoint,
+                    params: params
+                }).
+                success(function(data, status, headers, config) {
+                    def.resolve({"list": data});
+                    console.log(JSON.stringify({"list": data}));
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("error >> "+data);
+                    def.reject({});
+                });*/
+                return def.promise;
 
             },
             addUser: function(user_id) {

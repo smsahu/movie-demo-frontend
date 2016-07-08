@@ -1,11 +1,97 @@
 
-<p> Change or reset your User ID</p>
+<p> Change server IP</p>
 <div class="input-group">
-    <form ng-submit="searchMovies()">
+    <form ng-submit="searchItems()">
+        <input type="text" class="form-control" ng-model="current_server"/>
+    </form>
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="changeServer()">Update</button>
+      </span>
+</div>
+
+<p> Change User ID</p>
+<div class="input-group">
+    <form ng-submit="searchItems()">
         <input type="text" class="form-control" ng-model="current_user"/>
     </form>
               <span class="input-group-btn">
         <button class="btn btn-default" type="button" ng-click="changeUser()">Update</button>
-         <button class="btn btn-default" type="button" ng-click="resetUser()">Reset</button>
+         <!--<button class="btn btn-default" type="button" ng-click="resetUser()">Reset</button>-->
       </span>
+</div>
+
+
+<div id="watched">
+    <h3>Recent items
+        <button class="btn btn-default" type="button" ng-click="getRecentActions()">Refresh</button>
+    </h3>
+    <div class="row">
+        <div class="col-xs-2 col-md-2 item-column-small" ng-repeat="item in watched">
+            <div class="item-small thumbnail">
+                <div class="thumbnail item-pic-small">
+                    <img ng-src="{{item.data.attributesName.image}}" title="{{item.data.name}}" />
+                </div>
+                <div class="caption item-caption-small">
+                    <small>{{item.data.name}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ordered" >
+    <h3>Ordered items
+        <button class="btn btn-default" type="button" ng-click="getOrderedActions()">Refresh</button>
+    </h3>
+    <div class="row">
+        <div class="col-xs-2 col-md-2 item-column-small" ng-repeat="item in ordered">
+            <div class="item-small thumbnail">
+                <div class="thumbnail item-pic-small">
+                    <img ng-src="{{item.orderItemImage.thumb}}" title="{{item.name}}" />
+                </div>
+                <div class="caption item-caption-small">
+                    <small>{{item.name}}-({{item.id}})</small>
+                </div>
+                <div class="text-center">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" ng-click="addViewAction({{item.id}})">V</button>
+                        <button type="button" ng-click="addCartAction({{item.id}})">C</button>
+                        <button type="button" ng-click="addBuyAction({{item.id}})">B</button>
+
+                        <!--<div class="btn-group" role="group">-->
+                        <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">-->
+                        <!--Find-->
+                        <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" role="menu">-->
+                        <!--<li><a ng-click="getRecommendations('recommenders:RECENT_MATRIX_FACTOR,num_recent_actions:1',{{item.id}})">Matrix factorization</a></li>-->
+                        <!--<li><a ng-click="getRecommendations('recommenders:RECENT_SIMILAR_ITEMS,num_recent_actions:1',{{item.id}})">Similar Items</a></li>-->
+                        <!--<li><a ng-click="getRecommendations('recommenders:SEMANTIC_VECTORS,num_recent_actions:1',{{item.id}})">Tag similarity</a></li>-->
+                        <!--<li><a ng-click="getRecommendations('recommenders:RECENT_TOPIC_MODEL,num_recent_actions:1',{{item.id}})">Topic model</a></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="carted">
+    <h3>Carted items
+        <!--<button class="btn btn-default" type="button" ng-click="getCartedActions()">Refresh</button>-->
+    </h3>
+    <div class="row">
+        <div class="col-xs-2 col-md-2 item-column-small" ng-repeat="item in carted">
+            <div class="item-small thumbnail">
+                <div class="thumbnail item-pic-small">
+                    <img ng-src="{{item.sku.images[0].thumb}}" title="{{item.sku.name}}" />
+                </div>
+                <div class="caption item-caption-small">
+                    <small>{{item.sku.name}}-({{item.id}})</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
