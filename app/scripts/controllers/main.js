@@ -25,7 +25,9 @@ angular.module('movielensApp')
         $scope.simActivated = '';
         $scope.semActivated = '';
         $scope.wordActivated = '';
+        $scope.assocActivated = '';
         $scope.topActivated = '';
+        $scope.pioActivated = '';
         $scope.x1Activated = '';
         $scope.x2Activated = '';
         $scope.x3Activated = '';
@@ -362,7 +364,9 @@ angular.module('movielensApp')
             $scope.simActivated = '';
             $scope.semActivated = '';
             $scope.wordActivated = '';
+            $scope.assocActivated = '';
             $scope.topActivated = '';
+            $scope.pioActivated = '';
             $scope.x1Activated = '';
             $scope.x2Activated = '';
             $scope.x3Activated = '';
@@ -374,7 +378,9 @@ angular.module('movielensApp')
             $scope.simActivated = '';
             $scope.semActivated = '';
             $scope.wordActivated = '';
+            $scope.assocActivated = '';
             $scope.topActivated = '';
+            $scope.pioActivated = '';
             $scope.x1Activated = '';
             $scope.x2Activated = '';
             $scope.x3Activated = '';
@@ -427,6 +433,33 @@ angular.module('movielensApp')
                 }, 300);*/
             });
         };
+        $scope.getPioRecommendations = function(strategy) {
+            $scope.search_title = "Recommendations using existing algos";
+
+            Seldon.getPioRecommendations(strategy, user_email).then(function(items){
+                console.log('strategy'+strategy);
+                jQuery("#searched-items").show();
+                $scope.searchAlert = 'no-display'
+                $scope.searchResultsClass = 'no-display';
+                $scope.infoAlert = 'no-display';
+                console.log("items: "+JSON.stringify(items));
+                if(items && items.list.length > 0)
+                {
+                    $scope.recAlert = 'no-display'
+                    rewriteImageUrlForEmbedly(items.list);
+                    fillInMissingImages(items.list);
+                    $scope.items = items;
+                    $scope.recResults = 'should-display'
+                }
+                else
+                {
+                    $scope.recAlert = 'should-display'
+                }
+                /*jQuery('html, body').delay(100).animate({
+                 scrollTop: jQuery("#user-history-algs-section").offset().top
+                 }, 300);*/
+            });
+        };
         $scope.getXRecommendations = function(strategy) {
             $scope.search_title = "Recommendations using existing algos";
 
@@ -454,6 +487,9 @@ angular.module('movielensApp')
                  }, 300);*/
             });
         };
+        if(!getUserId()) {
+            $scope.changeUser();
+        }
         getUserId();
         getServerIp();
         // Make sure the user is created

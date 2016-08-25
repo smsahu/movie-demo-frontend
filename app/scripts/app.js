@@ -20,7 +20,7 @@ angular
         'Seldon'
 
     ])
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $httpProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
@@ -37,6 +37,14 @@ angular
             .otherwise({
                 redirectTo: '/'
             });
+        /*$httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common["X-Requested-With"];
+        $httpProvider.defaults.headers.common["Accept"] = "application/json";
+        $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT';
+        $httpProvider.defaults.headers.common['Access-Control-Allow-Credentials'] = true;*/
     });
 
 
@@ -46,7 +54,8 @@ var seldonAPI = angular.module('Seldon', ['ngResource']);
 seldonAPI.factory('Seldon', ['$http','$q', 'x2js',
     function($http, $q, x2js){
         var prefix = "http://";
-        var host = "10.0.0.190";
+        var def_host = "54.205.194.231:8084";
+        var host = def_host;
         var consumer_key = "ZEFH7RXHR5UE9TC3FR2D";
         var consumer_key2 = 'P7HXTMLB151SBGTNVI3G';
         var consumer_secret = "Y7R93F1I76R5WHRH2JVZ";
@@ -91,7 +100,7 @@ seldonAPI.factory('Seldon', ['$http','$q', 'x2js',
 
         return {
             setHost: function(ip) {
-                host = ip;
+                host = ip ? ip : def_host;
             },
             getAccessToken: function(){
                 return getAccessToken();
@@ -282,6 +291,39 @@ seldonAPI.factory('Seldon', ['$http','$q', 'x2js',
                     console.log("error >> "+data);
                     def.reject({});
                 });*/
+                return def.promise;
+
+            },
+            getPioRecommendations: function(strategy, user_id) {
+                //var pio = predictionio('XxIaPWJcL8ZVytr8igJCXOAVFRT2fw200zUOOlYW3dMwLfnaUXF8r91FZSAK4eAT');
+                //pio.item_recommendations(engine_name, query, callback)
+                var endpoint = "http://localhost:8000/queries.json";
+                var params = {
+                    'user': user_id
+                };
+                // 'jsonpCallback': 'JSON_CALLBACK'
+                var def = $q.defer();
+                console.log(endpoint);
+                console.log(params);
+                $http.post(endpoint, params).success(function(data, status, headers, config) {
+                    // console.log(headers('Location'));
+                    def.resolve({"list": data.itemScores});
+                    console.log(JSON.stringify({"list": data}));
+                });
+
+                /* $http({
+                 method: 'JSONP',
+                 url: endpoint,
+                 params: params
+                 }).
+                 success(function(data, status, headers, config) {
+                 def.resolve({"list": data});
+                 console.log(JSON.stringify({"list": data}));
+                 }).
+                 error(function(data, status, headers, config) {
+                 console.log("error >> "+data);
+                 def.reject({});
+                 });*/
                 return def.promise;
 
             },

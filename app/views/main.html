@@ -27,11 +27,14 @@
     <!--<h3>Algorithms</h3>-->
     <!--<div class="alert alert-info " role="alert">Click on the algorithms below to get recommendations based on your liked items or add some more liked items to increase the accuracy. <a href="#/about#algoSection">More information</a></div>
 -->    <ul class="nav nav-pills nav-justified">
-        <li ng-class="defActivated"><a ng-click="activateAlgButton('defActivated');getRecommendations('')">Default</a></li>
+        <li ng-class="defActivated"><a ng-click="activateAlgButton('defActivated');getRecommendations('')">All / Combo</a></li>
         <li ng-class="mfActivated"><a ng-click="activateAlgButton('mfActivated');getRecommendations('recommenders:RECENT_MATRIX_FACTOR')">Matrix Factorization</a></li>
         <li ng-class="simActivated"><a ng-click="activateAlgButton('simActivated');getRecommendations('recommenders:RECENT_SIMILAR_ITEMS')">Similar Items</a></li>
         <li ng-class="semActivated"><a ng-click="activateAlgButton('semActivated');getRecommendations('recommenders:RECENT_TOPIC_MODEL')">Topic Model</a></li>
         <li ng-class="wordActivated"><a ng-click="activateAlgButton('wordActivated');getRecommendations('recommenders:WORD2VEC')">Word2Vec</a></li>
+        <li ng-class="assocActivated"><a ng-click="activateAlgButton('assocActivated');getRecommendations('recommenders:ASSOC_RULE')">AssocRule</a></li>
+
+        <!--<li ng-class="pioActivated"><a ng-click="activateAlgButton('pioActivated');getPioRecommendations('1')">Pio-1</a></li>-->
         <li ng-class="x1Activated"><a ng-click="activateAlgButton('x1Activated');getXRecommendations('1')">Ex-1</a></li>
         <li ng-class="x2Activated"><a ng-click="activateAlgButton('x2Activated');getXRecommendations('2')">Ex-2</a></li>
         <li ng-class="x3Activated"><a ng-click="activateAlgButton('x3Activated');getXRecommendations('3')">Ex-3</a></li>
